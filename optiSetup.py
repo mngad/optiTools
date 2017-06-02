@@ -1,16 +1,13 @@
-#!/usr/bin/python3
+"""Gavin Day 15/09/16.
 
-#====================================================================================
-#Gavin Day 15/09/16
-#Requires a stiffness.csv file with the same filename minus extension and loads in the second column
-#change material for to be optimised below
-#====================================================================================
-
+Requires a stiffness.csv file with the same filename minus extension and loads
+in the second column change material for to be optimised below.
+"""
 import os
 import csv
 cwd = os.getcwd()
 
-#template for the python files
+# template for the python files
 template = """
 import os
 
@@ -36,7 +33,7 @@ def parametrisedTests(scaleFactor):
         numCpus=8)
     myJob.writeInput()
     return myJob,mdb
-    
+
 def postPro(odbName):
     odbToolbox = r"D:\GDAY_Opti\HUMAN_INTACT\postPro4Abq"
     import sys
@@ -52,7 +49,7 @@ def postPro(odbName):
     stiffness = extForceList[-1]/extDiplsList[-1]*1000.
     odbTools.writeValuesOpti(stiffness)
     myOdb.close()
-    
+
 if __name__ == '__main__':
     import sys
     optiParam = float(sys.argv[-1])
@@ -62,19 +59,20 @@ if __name__ == '__main__':
     mdb.close()
   """
 
-for filename in os.listdir(cwd): #cycle through files in cwd
-    initFile = open('__init__.py','w')
+for filename in os.listdir(cwd):  # cycle through files in cwd
+    initFile = open('__init__.py', 'w')
     initFile.close()
-    if filename.endswith(".inp"): #find inps
-        filename = filename[:-4] #remove extension
-        context = {                 #context for the tmplate - bits to change - filname etc.
-            "currentDir":cwd,
-            "fileName_temp":filename
+    if filename.endswith(".inp"):  # find inps
+        filename = filename[:-4]   # remove extension
+        context = {                # context for the tmplate - bits to change
+                                   # - filname etc.
+            "currentDir": cwd,
+            "fileName_temp": filename
         }
         pythonFile = open(filename + '.py', 'w')
         pythonFile.write(template.format(**context))
         pythonFile.close()
-        f = open('stiffness.csv') #opens initial stifness.csv
+        f = open('stiffness.csv')  # opens initial stifness.csv
         print('openned stiffness.csv')
         csv_f = csv.reader(f)
         for row in csv_f:
@@ -84,6 +82,3 @@ for filename in os.listdir(cwd): #cycle through files in cwd
                 asciiFile.close()
 
         continue
-    else:
-        continue
-
